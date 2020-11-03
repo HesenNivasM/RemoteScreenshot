@@ -60,6 +60,13 @@
                 </div>
                 <div class="col-md-2"></div>
             </div>
+            <div style="display: none;" class="row" id="loader">
+                <div class="col-4"></div>
+                <div class="col-4">
+                    <img src="./loader/loader.gif">
+                </div>
+                <div class="col-4"></div>
+            </div>
             <div style="display: none" class="row" id="finalImageDiv">
                 <div class="col-2"></div>
                 <div class="col-6">
@@ -72,8 +79,13 @@
     <script>
         let finalsrc = '<%= targetURL %>';
         const showImage = () => {
-            document.getElementById('finalImage').src = './images/' + finalsrc;
-            document.getElementById('finalImageDiv').style.display = 'block';
+            document.getElementById('loader').style.display = 'block';
+            document.getElementById('finalImageDiv').style.display = 'none';
+            setTimeout(() => {
+                document.getElementById('finalImage').src = './images/' + finalsrc;
+                document.getElementById('loader').style.display = 'none';
+                document.getElementById('finalImageDiv').style.display = 'block';
+            }, 7000);
         };
     </script>
 </html>
