@@ -11,33 +11,24 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(bodyParser.urlencoded({ extended: true }));
 
 let filename;
+let format;
 
 app.post('/submit', (req, res) => {
-    console.log('====================' + req.body['url'] + "====================")
+    console.log('====================' + req.body['url'] + '====================');
     let date = new Date();
-    let minutes =
-        date.getMinutes() < 10
-            ? '0' + String(date.getMinutes())
-            : date.getMinutes();
-    let seconds =
-        date.getSeconds() < 10
-            ? '0' + String(date.getSeconds())
-            : date.getSeconds();
-    filename =
-        date.toISOString().slice(0, 10) +
-        '-' +
-        date.getHours() +
-        '-' +
-        minutes +
-        '-' +
-        seconds +
-        '.png';
+    let hours = date.getHours() < 10 ? '0' + String(date.getHours()) : date.getHours();
+    let minutes = date.getMinutes() < 10 ? '0' + String(date.getMinutes()) : date.getMinutes();
+    let seconds = date.getSeconds() < 10 ? '0' + String(date.getSeconds()) : date.getSeconds();
+    filename = date.toISOString().slice(0, 10) + '-' + hours + '-' + minutes + '-' + seconds;
+
+    format = req.body.format;
 
     (async () => {
         await new Pageres({ delay: 5 })
-            .src('https://' + req.body.url, ['1024x768'], {
+            .src('https://' + req.body.url, [req.body.resolution], {
                 crop: true,
                 filename: '<%= date %>-<%= time %>',
+                format: format,
             })
             .dest(__dirname + '/public/images')
             .run();
@@ -48,7 +39,7 @@ app.post('/submit', (req, res) => {
 });
 
 app.use('/', (req, res) => {
-    res.render('index.html', { targetURL: filename });
+    res.render('index.html', { targetURL: filename + '.' + format });
     console.log('Gottt');
 });
 
