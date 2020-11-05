@@ -24,7 +24,7 @@ app.post('/submit', (req, res) => {
     format = req.body.format;
 
     (async () => {
-        await new Pageres({ delay: 5 })
+        await new Pageres({ delay: 2 })
             .src('https://' + req.body.url, [req.body.resolution], {
                 crop: true,
                 filename: '<%= date %>-<%= time %>',
@@ -40,6 +40,8 @@ app.post('/submit', (req, res) => {
 
 app.use('/', (req, res) => {
     res.render('index.html', { targetURL: filename + '.' + format });
+    filename = '';
+    format = '';
     console.log('Gottt');
 });
 
